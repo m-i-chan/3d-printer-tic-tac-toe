@@ -8,7 +8,12 @@ import sys
 import time
 from printrun.printcore import printcore
 
-import tictactoe as ttt
+import print_func as pf
+
+def setup():
+    printer = pf.Printer(p,offset["x"],offset["y"],offset["z"])
+    printer.home()
+    printer.load_pen()
 
 if __name__ == "__main__":
     if sys.version_info.major != 3 and sys.version_info.minor != 12:
@@ -23,7 +28,5 @@ if __name__ == "__main__":
         for key in offset.keys():
             offset[key] = input(f"{key} offset in mm: ")
     p = printcore(port,baud)
-    setup = ttt.Printer(p,offset["x"],offset["y"],offset["z"])
-    setup.home()
-    setup.load_pen()
+    setup()
     p.disconnect()
