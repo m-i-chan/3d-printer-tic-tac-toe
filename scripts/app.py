@@ -30,9 +30,9 @@ class TicTacToe_App:
 
     def submit(self):
         com_port = self.com_port_val.get()
-        p = self.printcore(com_port,115200)
-        if not p.online:
-            self.printer = self.pf.Printer(p)
+        self.p = self.printcore(com_port,115200)
+        if not self.p.online:
+            self.printer = self.pf.Printer(self.p)
             self.com_port_frame.destroy()
             self.display_menu_frame()
             self.printer.home()
@@ -75,7 +75,6 @@ class TicTacToe_App:
         self.game_frame.pack()
         self.game_frame.columnconfigure(1,minsize=105)
 
-
         top_left_button = self.tk.Button(self.game_frame,text="\u2518",command=lambda: self.move(0,0))
         top_left_button.grid(row=0,column=0)
 
@@ -111,12 +110,19 @@ class TicTacToe_App:
         new_game_button = self.tk.Button(self.game_frame,text="New Game",command=self.new_game)
         new_game_button.grid(row=5, column=0, columnspan=3)
 
+        quit_button = self.tk.Button(self.game_frame,text="Quit",command=self.quit)
+        quit_button.grid(row=6,column=1)
+
     def new_game(self):
         self.game_frame.destroy()
         self.display_game_frame()
         self.printer.center()
         self.game.new_game()
     
+    def quit(self):
+        self.p.disconnect()
+        self.root.destroy()
+
     def move(self,x,y):
         try:
             self.game.turn(x,y)
