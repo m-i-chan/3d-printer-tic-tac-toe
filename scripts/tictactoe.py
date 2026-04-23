@@ -1,3 +1,10 @@
+"""
+tictactoe.py
+
+Contains board and game class for tic-tac-toe.
+
+"""
+
 class Board():
     # -1 for player 1, 0 for empty, 1 for player 2
     def __init__(self):
@@ -6,6 +13,7 @@ class Board():
                       [0, 0, 0]]
 
     def mark_board(self,player,row,col):
+        # Checks if board is empty then marks board.
         if self.board[row][col] != 0:
             raise ValueError("Space occupied")
         self.board[row][col] = player
@@ -62,7 +70,15 @@ class Board():
     def __str__(self):
         out = ""
         for row in self.board:
-            out += str(row) + "\n"
+            row_list = []
+            for col in row:
+                if col == -1: 
+                    row_list.append("x")
+                if col == 1: 
+                    row_list.append("o")
+                else:
+                    row_list.append(" ")
+            out += str(row_list) + "\n"
         return out
 
 class Game():
