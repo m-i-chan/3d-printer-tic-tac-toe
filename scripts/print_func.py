@@ -11,12 +11,12 @@ class Printer():
     # Pen offset from extruder in mm.
     pen_x = 0
     pen_y = 0
-    pen_z = 12.5
+    pen_z = 0
 
 
     lift_z = pen_z + 5 # Height to lift pen after drawing.
 
-    def __init__(self,p:printcore,x:float=0,y:float=0,z:float=0):
+    def __init__(self,p:printcore,x:float=0,y:float=0,z:float=12.5):
         self.p = p
         self.pen_x = x
         self.pen_y = y
