@@ -24,6 +24,7 @@ class TicTacToe_App:
         self.tk.Label(self.com_port_frame, text="COM Port").pack()
         self.com_port_val = self.tk.StringVar()
         self.com_port_entry = self.tk.Entry(self.com_port_frame,textvariable=self.com_port_val)
+        self.tk.Label(self.com_port_frame,text="(Ensure baud rate is 115200 in device manager.)").pack()
         com_port_button = self.tk.Button(self.com_port_frame, text="Connect",command=self.submit)
         self.com_port_entry.pack()
         com_port_button.pack()
@@ -52,6 +53,7 @@ class TicTacToe_App:
     def start(self):
         self.menu_frame.destroy()
         self.display_game_frame()
+        self.printer.draw_grid()
 
     def setup(self):
         self.menu_frame.destroy()
@@ -75,29 +77,30 @@ class TicTacToe_App:
         self.game_frame.pack()
         self.game_frame.columnconfigure(1,minsize=105)
 
+        # GUI grid and printer grid are reflected over y=x for...reasons? TODO: Investigate
+
         top_left_button = self.tk.Button(self.game_frame,text="\u2518",command=lambda: self.move(0,0))
         top_left_button.grid(row=0,column=0)
 
-        top_middle_button = self.tk.Button(self.game_frame,text="  ",command=lambda: self.move(0,1))
+        top_middle_button = self.tk.Button(self.game_frame,text="  ",command=lambda: self.move(1,0))
         top_middle_button.grid(row=0,column=1)
 
-
-        top_right_button = self.tk.Button(self.game_frame,text="\u2514",command=lambda: self.move(0,2))
+        top_right_button = self.tk.Button(self.game_frame,text="\u2514",command=lambda: self.move(2,0))
         top_right_button.grid(row=0,column=2)
 
-        middle_left_button = self.tk.Button(self.game_frame,text="  ",command=lambda: self.move(1,0))
+        middle_left_button = self.tk.Button(self.game_frame,text="  ",command=lambda: self.move(0,1))
         middle_left_button.grid(row=1,column=0)
 
         middle_middle_button = self.tk.Button(self.game_frame,text="\u25A1",command=lambda: self.move(1,1))
         middle_middle_button.grid(row=1,column=1)
 
-        middle_right_button = self.tk.Button(self.game_frame,text="  ",command=lambda: self.move(1,2))
+        middle_right_button = self.tk.Button(self.game_frame,text="  ",command=lambda: self.move(2,1))
         middle_right_button.grid(row=1,column=2)
 
-        bottom_left_button = self.tk.Button(self.game_frame,text="\u2510",command=lambda: self.move(2,0))
+        bottom_left_button = self.tk.Button(self.game_frame,text="\u2510",command=lambda: self.move(0,2))
         bottom_left_button.grid(row=2,column=0)
 
-        bottom_middle_button = self.tk.Button(self.game_frame,text="  ",command=lambda: self.move(2,1))
+        bottom_middle_button = self.tk.Button(self.game_frame,text="  ",command=lambda: self.move(1,2))
         bottom_middle_button.grid(row=2,column=1)
 
         bottom_right_button = self.tk.Button(self.game_frame,text="\u250C",command=lambda: self.move(2,2))
@@ -113,13 +116,30 @@ class TicTacToe_App:
         quit_button = self.tk.Button(self.game_frame,text="Quit",command=self.quit)
         quit_button.grid(row=6,column=1)
 
+    def display_new_game_frame(self):
+        self.new_game_frame = self.tk.Frame(self.root)
+        self.new_game_frame.pack()
+        
+        self.tk.Label(self.new_game_frame,text="Clear the board.").pack()
+
+        new_game_next_button = self.tk.Button(self.new_game_frame,text="Next",command=self.new_game_confirm)
+        new_game_next_button.pack()
+
+    def new_game_confirm(self):
+        self.new_game_frame.destroy()
+        
+        self.printer.draw_grid()
+
+        self.display_game_frame()
+
     def new_game(self):
         self.game_frame.destroy()
-        self.display_game_frame()
+        self.display_new_game_frame()
         self.printer.center()
-        self.game.new_game()
+        self.game.new_game() # Clear computer's game state
     
     def quit(self):
+        self.printer.center()
         self.p.disconnect()
         self.root.destroy()
 
@@ -133,6 +153,7 @@ class TicTacToe_App:
                 self.printer.draw_o(x,y)
             if self.game.winner != 0:
                 self.player_label.config(text=f"Game over, {"X" if self.game.winner == -1 else "O"} won!")
+                self.printer.center()
             else:
                 self.player_label_toggle()
             self.error_label.grid_forget()

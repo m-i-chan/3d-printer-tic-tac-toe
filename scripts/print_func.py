@@ -11,9 +11,9 @@ class Printer():
     # Pen offset from extruder in mm.
     pen_x = 0
     pen_y = 0
-    pen_z = 0
+    pen_z = 12.5
 
-    wait_time = 1 # Time in seconds after draw_line and draw_circle commands to wait for printer to draw.
+    wait_time = 5 # Time in seconds after draw_line and draw_circle commands to wait for printer to draw.
 
 
     lift_z = pen_z + 5 # Height to lift pen after drawing.
@@ -36,6 +36,7 @@ class Printer():
     
     def pen_loaded(self):
         self.p.send(f'G0 Z{self.pen_z} F500;') # Lowers print head to meet desired pen_z offset and ensure pen is at correct height.
+        self.p.send(f'G0 F6000;')
 
     def go_to(self,x,y):
         self.p.send(f'G0 X{x-self.pen_x} Y{y-self.pen_y};')
@@ -49,7 +50,6 @@ class Printer():
         self.p.send(f'G0 Z{self.pen_z};')
         self.p.send(f'G0 X{end_x-self.pen_x} Y{end_y-self.pen_y};')
         self.p.send(f'G0 Z{self.lift_z};')
-        time.sleep(self.wait_time)
     
     def draw_circle(self, start_x, start_y, i_offset, j_offset):
         self.p.send(f'G0 Z{self.lift_z};')
@@ -83,5 +83,6 @@ class Printer():
         self.draw_line(offset_x,offset_y,offset_x + 36, offset_y - 36)
         self.draw_line(offset_x,offset_y-36,offset_x + 36, offset_y)
         print(f'Drawing X at ({grid_x},{grid_y})')
+        time.sleep(self.wait_time)
 
         
