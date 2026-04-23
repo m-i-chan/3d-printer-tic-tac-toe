@@ -93,7 +93,8 @@ class Game():
         self.board.mark_board(player, row, col)
         self.next_player()
     
-    def run_game(self):
+    def terminal_game(self):
+        # Intended to run a game in terminal.
         game_on = True
         while game_on:
             print(f'Player {"1" if self.player == -1 else "2"}, enter your move.')
