@@ -13,6 +13,8 @@ class Printer():
     pen_y = 0
     pen_z = 0
 
+    wait_time = 1 # Time in seconds after draw_line and draw_circle commands to wait for printer to draw.
+
 
     lift_z = pen_z + 5 # Height to lift pen after drawing.
 
@@ -31,9 +33,9 @@ class Printer():
     
     def load_pen(self):
         self.p.send(f'G0 X{110-self.pen_x} Y{self.pen_y} Z25.4;') # Brings print head to front of printer to enable loading of pen.
-        input("Press enter when pen is loaded.") # Awaits user confirmation that pen is loaded.
+    
+    def pen_loaded(self):
         self.p.send(f'G0 Z{self.pen_z} F500;') # Lowers print head to meet desired pen_z offset and ensure pen is at correct height.
-        self.center()
 
     def go_to(self,x,y):
         self.p.send(f'G0 X{x-self.pen_x} Y{y-self.pen_y};')
@@ -47,7 +49,7 @@ class Printer():
         self.p.send(f'G0 Z{self.pen_z};')
         self.p.send(f'G0 X{end_x-self.pen_x} Y{end_y-self.pen_y};')
         self.p.send(f'G0 Z{self.lift_z};')
-        time.sleep(1)
+        time.sleep(self.wait_time)
     
     def draw_circle(self, start_x, start_y, i_offset, j_offset):
         self.p.send(f'G0 Z{self.lift_z};')
@@ -55,7 +57,7 @@ class Printer():
         self.p.send(f'G0 Z{self.pen_z};')
         self.p.send(f'G2 I{i_offset} J{j_offset};')
         self.p.send(f'G0 Z{self.lift_z};')
-        time.sleep(1)
+        time.sleep(self.wait_time)
     
     def draw_grid(self):
         # Draws tic tac toe grid
@@ -67,15 +69,19 @@ class Printer():
     
     def draw_o(self,grid_x=0,grid_y=0):
         # Draws an o in specified square of above grid. Grid coordinates are (0,0) for top left square and (2,2) for bottom right.
+        # Hard coded for above grid
         offset_x = 70 + 40 * grid_x
         offset_y = 168 - 40 * grid_y
         self.draw_circle(offset_x,offset_y,0,-18)
+        print(f'Drawing O at ({grid_x},{grid_y})')
     
     def draw_x(self,grid_x=0,grid_y=0):
         #  Draws an x in specified square of above grid. Grid coordinates are (0,0) for top left square and (2,2) for bottom right.
+        # Hard coded for above grid
         offset_x = 52 + 40 * grid_x
         offset_y = 168 - 40* grid_y
         self.draw_line(offset_x,offset_y,offset_x + 36, offset_y - 36)
         self.draw_line(offset_x,offset_y-36,offset_x + 36, offset_y)
+        print(f'Drawing X at ({grid_x},{grid_y})')
 
         

@@ -74,7 +74,7 @@ class Board():
             for col in row:
                 if col == -1: 
                     row_list.append("x")
-                if col == 1: 
+                elif col == 1: 
                     row_list.append("o")
                 else:
                     row_list.append(" ")
@@ -85,13 +85,23 @@ class Game():
     def __init__(self):
         self.board = Board()
         self.player = -1
+        self.winner = 0
     
     def next_player(self):
         self.player *= -1
     
-    def turn(self, player, row, col):
-        self.board.mark_board(player, row, col)
+    def turn(self, row, col):
+        if self.winner == 0:
+            self.board.mark_board(self.player, row, col)
+        else:
+            raise Exception(f'Game over, {self.winner} won.')
+        self.winner = self.board.get_Winner()
         self.next_player()
+    
+    def new_game(self):
+        self.board.clear_board()
+        self.player = -1
+        self.winner = 0
     
     def terminal_game(self):
         # Intended to run a game in terminal.
@@ -100,7 +110,7 @@ class Game():
             print(f'Player {"1" if self.player == -1 else "2"}, enter your move.')
             response = input().split(",")
             try:
-                self.turn(self.player,int(response[0]),int(response[1]))        
+                self.turn(int(response[0]),int(response[1]))        
             except ValueError:
                 print("Space occupied.")
             winner = self.board.get_Winner()
