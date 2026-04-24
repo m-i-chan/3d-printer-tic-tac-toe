@@ -25,8 +25,8 @@ class Printer():
         self.pen_z = z
 
     def home(self):
-        self.p.send('G0 F6000;') # Increase move rate.
-        self.p.send('G28 ;') # Home printer
+        self.p.send('G0 F6000;') # Increase move rate. 
+        self.p.send('G28 ;') # Home printer.
     
     def center(self):
         self.p.send(f'G0 X{110-self.pen_x} Y{110-self.pen_y} Z50 F6000;') # Centers pen on Ender 3 with default bed size of 220x220mm.

@@ -63,11 +63,11 @@ class TicTacToe_App:
     def display_setup_frame(self):
         self.setup_frame = self.tk.Frame(self.root)
         self.setup_frame.pack()
-        self.tk.Label(self.setup_frame,text="Click confirm when pen is loaded.").pack()
-        confirm_button = self.tk.Button(self.setup_frame,text="Confirm",command=self.setup_confirm)
+        self.tk.Label(self.setup_frame,text="Click confirm when pen and whiteboard is loaded.").pack()
+        confirm_button = self.tk.Button(self.setup_frame,text="Confirm",command=self.pen_confirm)
         confirm_button.pack()
     
-    def setup_confirm(self):
+    def pen_confirm(self):
         self.printer.pen_loaded()
         self.setup_frame.destroy()
         self.display_menu_frame()
